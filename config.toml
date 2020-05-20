@@ -1,0 +1,25 @@
+baseURL = "https://www.talesfromthescript.co.uk"
+languageCode = "en-us"
+title = "tales from the <script>"
+theme = "hyde-hyde"
+
+[params]
+copyright = "highjack"
+author = "highjack"
+locale = "en-US"
+authorimage = "/img/zombie.png"
+
+[params.social]
+twitter = "highjack_"
+github = "highjack"
+
+[[menu.main]]
+    name = "ctf"
+    weight = 100
+    identifier = "ctf"
+    url = "/tags/ctf"
+[[menu.main]]
+    name = "About"
+    identifier = "about"
+    weight = 300
+    url = "/about/"
