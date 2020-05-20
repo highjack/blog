@@ -7,7 +7,7 @@ theme = "hyde-hyde"
 copyright = "highjack"
 author = "highjack"
 locale = "en-US"
-authorimage = "img/zombie.png"
+authorimage = "/img/zombie.png"
 
 [params.social]
 twitter = "highjack_"
