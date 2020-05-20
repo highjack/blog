@@ -7,6 +7,10 @@ printf "\033[0;32mDeploying updates to GitHub...\033[0m\n"
 
 # Build the project.
 hugo -t hyde-hyde # if using a theme, replace with `hugo -t <YOURTHEME>`
+git add .
+msg="rebuilding site $(date)"
+git commit -m "$msg"
+git push
 
 # Go To Public folder
 cd public
@@ -15,10 +19,6 @@ cd public
 git add .
 
 # Commit changes.
-msg="rebuilding site $(date)"
-if [ -n "$*" ]; then
-		msg="$*"
-fi
 git commit -m "$msg"
 
 # Push source and build repos.
