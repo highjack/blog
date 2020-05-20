@@ -1,4 +1,4 @@
-baseURL = "https://www.talesfromthescript.co.uk"
+baseURL = "https://www.talesfromthescript.co.uk/"
 languageCode = "en-us"
 title = "tales from the <script>"
 theme = "hyde-hyde"
