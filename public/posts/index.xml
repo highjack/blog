@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on tales from the &lt;script&gt;</title>
+    <link>https://www.talesfromthescript.co.uk/posts/</link>
+    <description>Recent content in Posts on tales from the &lt;script&gt;</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 22 Feb 2018 23:03:22 +0000</lastBuildDate>
+    
+	<atom:link href="https://www.talesfromthescript.co.uk/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>HTB - Mantis write up</title>
+      <link>https://www.talesfromthescript.co.uk/posts/mantis/</link>
+      <pubDate>Thu, 22 Feb 2018 23:03:22 +0000</pubDate>
+      
+      <guid>https://www.talesfromthescript.co.uk/posts/mantis/</guid>
+      <description>Hey guys, so today I&amp;rsquo;m going to walk you through how I solved the Mantis box on hackthebox.org, it starts the same way most network pentests do, with an nmap scan&amp;hellip;
+As you can see below the results are pretty monsterous, but to summarize, we have a Windows DC (it&amp;rsquo;s running LDAP, Keberos etc) running Server 2008 R2, with SQL Server 2014 and two web servers, one on port 1337 and the other on 8080.</description>
+    </item>
+    
+    <item>
+      <title>HTB - Solidstate write up</title>
+      <link>https://www.talesfromthescript.co.uk/posts/solidstate/</link>
+      <pubDate>Thu, 25 Jan 2018 08:59:59 +0000</pubDate>
+      
+      <guid>https://www.talesfromthescript.co.uk/posts/solidstate/</guid>
+      <description>This box was fairly easy but it had a new technology I&amp;rsquo;ve never heard of before called &amp;ldquo;Apache James&amp;rdquo;.
+If you run a basic nmap with all ports, default scripts, service and OS identification like this nmap -p- -A 10.10.10.51 -vv
+you will find the following ports open: PORT STATE SERVICE REASON VERSION 22/tcp open ssh syn-ack ttl 63 OpenSSH 7.4p1 Debian 10+deb9u1 (protocol 2.0) 25/tcp open smtp syn-ack ttl 63 JAMES smtpd 2.</description>
+    </item>
+    
+    <item>
+      <title>VULNHUB - Fristi Leaks</title>
+      <link>https://www.talesfromthescript.co.uk/posts/fristi-leaks/</link>
+      <pubDate>Sun, 22 Feb 2015 23:03:22 +0000</pubDate>
+      
+      <guid>https://www.talesfromthescript.co.uk/posts/fristi-leaks/</guid>
+      <description>Yo, So it’s Christmas time and my life is temporarily calming down and just in time for me to enter this competition. It was pretty straight forward vulnerable web application, with some simple code review but now I’ve done it and I have some time, I thought I may aswell write it up. So this story starts the same way as every other pentest, conveniently for us, the IP address is provided by the VM itself.</description>
+    </item>
+    
+    <item>
+      <title>VULNHUB - Persistence write up</title>
+      <link>https://www.talesfromthescript.co.uk/posts/persistence/</link>
+      <pubDate>Thu, 25 Sep 2014 08:59:59 +0000</pubDate>
+      
+      <guid>https://www.talesfromthescript.co.uk/posts/persistence/</guid>
+      <description>Initial Enumeration The IP address of our target was identified using the netdiscover command, examining our own IP address of 192.168.56.102 it made sense for the IP to be close very close:
+The next step was to identify any open ports using our favourite port scanner nmap, for completeness I decided to perform a full TCP scan to start with (-p 1-65535), identifying the versions of any software we might find with (-sV), setting the timing template to 5 as we are scanning over the LAN with no firewall devices in our way (-T5).</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://www.talesfromthescript.co.uk/posts/sokar/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.talesfromthescript.co.uk/posts/sokar/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
